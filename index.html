@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aser’s Road</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;600;800&family=JetBrains+Mono:wght@500;600&family=Noto+Sans+Ethiopic:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app" class="intro-on">
+  <canvas id="road-canvas" tabindex="0" aria-label="Interactive 3D road. Drive with W A S D or the arrow keys. A button in the top right switches to the standard website."></canvas>
+  <div id="intro" role="dialog" aria-label="Welcome to Aser’s Road">
+    <div class="in-shade"></div>
+    <div class="in-main">
+      <div class="in-eyebrow"><span class="live-dot"></span><span id="inClock">Addis Ababa</span></div>
+      <h1 class="in-title"><span>Aser’s</span><span>Road</span></h1>
+      <div class="in-actions">
+        <button id="startBtn" class="in-start" type="button" disabled><span class="in-start-t">Warming up…</span><span class="in-start-i" aria-hidden="true">→</span></button>
+        <button id="skipBtn" class="in-skip" type="button">Open the normal website</button>
+      </div>
+    </div>
+    <div class="in-line" aria-hidden="true"></div>
+  </div>
+  <header class="hud hud-tl" aria-live="polite">
+    <div class="eyebrow">Now driving through</div>
+    <h1 id="zoneName">Hero</h1>
+    <ol id="zoneSteps" aria-hidden="true"></ol>
+  </header>
+  <div class="hud hud-tr">
+    <button id="timeBtn" class="chip" type="button" title="Addis Ababa time (GMT+3). Click to preview another time of day.">
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+      <span id="timeText">Addis —</span>
+    </button>
+    <button id="camBtn" class="chip" type="button" title="Change the camera view (C)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span id="camText">Bird’s-eye</span></button>
+    <button id="uturnBtn" class="chip" type="button" title="Turn around (Space)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20V9a5 5 0 0 1 10 0v4"/><path d="M13 10l4 4 4-4"/></svg><span>Turn around</span></button>
+    <button id="restartBtn" class="chip" type="button" title="Go back to the start of the road"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span>Restart road</span></button>
+    <button id="soundBtn" class="chip" type="button" title="Sound on or off (M)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg><span id="soundText">Sound on</span></button>
+    <button id="siteBtn" class="btn" type="button">Switch to Normal Website</button>
+  </div>
+  <div id="hint">Drive with W A S D or Arrow keys · Space turns around</div>
+  <div id="zoneToast" aria-hidden="true"><span class="t-k" id="toastK"></span><span class="t-n" id="toastN"></span></div>
+  <aside id="cta" aria-label="Contact">
+    <div class="eyebrow">You made it</div>
+    <h2 id="ctaTitle">Let’s talk.</h2>
+    <span class="mail" id="ctaMail"></span>
+    <div class="row"><button class="btn" id="ctaCopy" type="button">Copy email</button><button class="btn alt" id="ctaBack" type="button">Turn around</button><button class="btn alt" id="ctaRestart" type="button">Restart the road</button><button class="btn alt" id="ctaSite" type="button">Open normal site</button></div>
+  </aside>
+  <div id="touch" aria-hidden="true">
+    <div class="grp"><button data-k="left" aria-label="Steer left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><button data-k="right" aria-label="Steer right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    <div class="grp"><button data-k="uturn" aria-label="Turn around"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20V9a4 4 0 0 1 8 0v3"/><path d="M12 9l4 4 4-4" transform="translate(0 0)"/></svg></button><button data-k="down" aria-label="Brake"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></svg></button><button data-k="up" aria-label="Accelerate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15l7-7 7 7"/></svg></button></div>
+  </div>
+</div>
+<div id="site"></div>
+
+<!-- three.js (ES module build, loaded from a CDN). Everything else is in the js/ folder. -->
+<script type="module">
+try { window.THREE = await import("https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js"); } catch (e) { window.THREE = undefined; }
+window.THREE_READY = true; window.dispatchEvent(new Event('three-ready'));
+</script>
+<script src="js/content.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/sfx.js"></script>
+<script src="js/site.js"></script>
+<script src="js/textures.js"></script>
+<script src="js/road.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
